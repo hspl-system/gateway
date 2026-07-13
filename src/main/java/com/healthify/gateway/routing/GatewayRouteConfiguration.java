@@ -16,7 +16,7 @@ public class GatewayRouteConfiguration {
 
     @Bean
     RouterFunction<ServerResponse> opdServiceRoutes(
-            HandlerFilterFunction<ServerResponse, ServerResponse> loggingGatewayFilter) {
+            HandlerFilterFunction<ServerResponse, ServerResponse> loggingGatewayFilter,  HandlerFilterFunction<ServerResponse, ServerResponse> securityHeaderFilter) {
 
         return route("opd-service") // routing builder : collects all routes
                 .route(path("/hello"),
@@ -24,6 +24,7 @@ public class GatewayRouteConfiguration {
                 .route(path("/consultation/**"),
                         http("http://localhost:8080"))
                 .filter(loggingGatewayFilter) // filter is global to routing builder and applies to all routes under builder
+                .filter(securityHeaderFilter) //this filter adds the jwt token to header
                 .build();
     }
 
